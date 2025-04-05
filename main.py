@@ -33,18 +33,6 @@ def get_result(input_data, weight_layer, output_data, answer):
     return (output_data[prediction])
 
 
-def check_result(weighted_sum, need_weighted_sum, weight_layer):
-    # if weighted_sum >= need_weighted_sum:
-    # return True
-    if need_weighted_sum == 0:
-        delta = -0.1
-    else:
-        # delta = (1+(1-weighted_sum/need_weighted_sum))
-        delta = 0.1
-    # delta = need_weighted_sum-weighted_sum
-    adjust_weights(weight_layer=weight_layer, delta=delta)
-
-
 def main():
     input_data = [
         1, 0, 0, 0, 1,
