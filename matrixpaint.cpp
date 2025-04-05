@@ -7,11 +7,12 @@
 
 #include "packages/functions.cpp"
 #include "packages/AppSettings.h"
-
+#include "packages/neural.cpp"
 using namespace UI;
 
 std::vector<std::vector<int>> matrix_holst;
-
+std::vector<double> weight_layer;
+int MATRIX_SIZE = 28;
 // 1 символ 19 пиксель в высоту
 // 1 символ 19 пиксель в ширину
 
@@ -100,15 +101,22 @@ bool check_holst(std::vector<std::vector<int>> &matrix_holst, POINT &cursorPos)
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 2 * width_pixle_x))
             {
-                std::cout << "Start";
+                std::cout << GetResult(weight_layer, matrix_holst) << "\n";
+                system("pause");
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 3 * width_pixle_x))
             {
-                std::cout << "is_x";
+                std::cout << "Обученна\n";
+                Traning(weight_layer, matrix_holst, 1);
+                SaveWeights(weight_layer, "weight_layer");
+                system("pause");
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 4 * width_pixle_x))
             {
-                std::cout << "is_0";
+                std::cout << "Обученна\n";
+                Traning(weight_layer, matrix_holst, 0);
+                SaveWeights(weight_layer, "weight_layer");
+                system("pause");
             }
         }
     }
@@ -119,6 +127,7 @@ void Start()
 {
     int i = 0;
     bool active_click = false;
+
     while (true)
     {
         if (GetAsyncKeyState(VK_RBUTTON))
@@ -153,6 +162,11 @@ void Start()
 }
 int main()
 {
+
+    weight_layer = LoadWeights("weight_layer");
+    if (weight_layer.size() == 0)
+        weight_layer = CreateWeightLayer(MATRIX_SIZE * MATRIX_SIZE);
+
     bot_border = left_board + mtp_strin_on_number(bot_border_pixel, width);
     top_border = left_board + mtp_strin_on_number(top_border_pixel, width);
 
@@ -160,5 +174,6 @@ int main()
     print_holst_and_matrix(matrix_holst);
     Start();
     system("pause");
+
     return 0;
 }

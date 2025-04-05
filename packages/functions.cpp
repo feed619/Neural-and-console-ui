@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 void NoiseRemoval(std::vector<std::vector<int>> &matrix, int width, int height)
 {
@@ -50,4 +51,41 @@ void printMatrix(std::vector<std::vector<int>> read_matrix)
         }
         std::cout << "\n";
     }
+}
+
+void SaveWeights(const std::vector<double> &weight_layer, const std::string &filename)
+{
+    std::ofstream file(filename);
+    if (file.is_open())
+    {
+        for (double weight : weight_layer)
+        {
+            file << weight << "\n";
+        }
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Ошибка при сохранении в файл\n";
+    }
+}
+
+std::vector<double> LoadWeights(const std::string &filename)
+{
+    std::vector<double> weight_layer;
+    std::ifstream file(filename);
+    if (file.is_open())
+    {
+        double weight;
+        while (file >> weight)
+        {
+            weight_layer.push_back(weight);
+        }
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Ошибка при загрузке из файла\n";
+    }
+    return weight_layer;
 }

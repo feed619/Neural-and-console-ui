@@ -2,8 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
-
-int SIZE = 28;
+#include <iostream>
 
 struct OutputData
 {
@@ -21,7 +20,7 @@ std::vector<double> CreateWeightLayer(int size)
     std::vector<double> weight_layer;
     std::srand(std::time(nullptr));
 
-    for (int i; i < size; ++i)
+    for (int i = 0; i < size; ++i)
     {
         weight_layer.push_back((double)(std::rand() % 100 + 1) * 0.1 / 100);
     }
@@ -67,12 +66,20 @@ double Predict(std::vector<double> &weight_layer,
 }
 
 std::string GetResult(std::vector<double> &weight_layer,
-                      std::vector<std::vector<int>> &input_data,
-                      int answer)
+                      std::vector<std::vector<int>> &input_data)
+{
+    double weighted_sum = Predict(weight_layer, input_data);
+    int prediction = PredictFunction(weighted_sum);
+    std::cout << "с Вероятностью " << weighted_sum << "Это ";
+    return OutputData::getValue(prediction);
+}
+
+std::string Traning(std::vector<double> &weight_layer,
+                    std::vector<std::vector<int>> &input_data,
+                    int answer)
 {
     double weighted_sum = Predict(weight_layer, input_data);
     int prediction = PredictFunction(weighted_sum);
     AdjustWeights(weight_layer, input_data, answer, prediction);
-
     return OutputData::getValue(prediction);
 }
