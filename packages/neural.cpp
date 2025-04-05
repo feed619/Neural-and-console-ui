@@ -22,14 +22,14 @@ std::vector<double> CreateWeightLayer(int size)
 
     for (int i = 0; i < size; ++i)
     {
-        weight_layer.push_back((double)(std::rand() % 100 + 1) * 0.1 / 100);
+        weight_layer.push_back((double)(std::rand() % 199 - 99) * 0.1 / 100);
     }
     return weight_layer;
 }
 
-int PredictFunction(double value, float threshold = 0.5)
+int PredictFunction(double value, float threshold = 0)
 {
-    return (value >= threshold) ? 1 : 0;
+    return (value > threshold) ? 1 : 0;
 }
 
 void AdjustWeights(std::vector<double> &weight_layer,
@@ -70,7 +70,7 @@ std::string GetResult(std::vector<double> &weight_layer,
 {
     double weighted_sum = Predict(weight_layer, input_data);
     int prediction = PredictFunction(weighted_sum);
-    std::cout << "Вессовая сумма " << weighted_sum << " Это ";
+    // std::cout << "Вессовая сумма " << weighted_sum << " Это ";
     return OutputData::getValue(prediction);
 }
 
