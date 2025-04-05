@@ -101,7 +101,7 @@ bool check_holst(std::vector<std::vector<int>> &matrix_holst, POINT &cursorPos)
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 2 * width_pixle_x))
             {
-                std::cout << "На холсте изображен => " << GetResult(weight_layer, matrix_holst) << "\n";
+                std::cout << GetResult(weight_layer, matrix_holst) << "\n";
                 system("pause");
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 3 * width_pixle_x))
@@ -163,7 +163,7 @@ void Start()
 int main()
 {
 
-    system("color f0");
+    // system("color f0");
 
     weight_layer = LoadWeights("weight_layer");
     if (weight_layer.size() == 0)

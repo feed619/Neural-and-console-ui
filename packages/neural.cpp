@@ -70,7 +70,8 @@ std::string GetResult(std::vector<double> &weight_layer,
 {
     double weighted_sum = Predict(weight_layer, input_data);
     int prediction = PredictFunction(weighted_sum);
-    // std::cout << "Вессовая сумма " << weighted_sum << " Это ";
+    std::cout << "Вессовая сумма " << weighted_sum << "\n"
+              << "На холсте изображен => ";
     return OutputData::getValue(prediction);
 }
 
