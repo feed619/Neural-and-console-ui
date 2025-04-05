@@ -3,7 +3,7 @@ import random
 SIZE = 28
 
 
-def create_weight_layer(size: int):
+def create_weight_layer(size: int)-> list[float]:
     return [random.randint(0, 99)*0.1/100 for _ in range(size)]
 
 
