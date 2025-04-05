@@ -70,7 +70,7 @@ void print_holst_and_matrix(std::vector<std::vector<int>> &matrix_holst)
         i++;
     }
     string_holst += bot_border;
-    std::cout << string_holst + "\n" + buttons + top_board + '\0';
+    std::cout << string_holst + buttons + top_board + '\0';
 }
 
 bool check_holst(std::vector<std::vector<int>> &matrix_holst, POINT &cursorPos)
@@ -84,35 +84,39 @@ bool check_holst(std::vector<std::vector<int>> &matrix_holst, POINT &cursorPos)
         if ((cursorPos.y >= start_holst_y && cursorPos.y <= end_holst_y))
         {
             int pixel_x = std::round((cursorPos.x - start_holst_x) / (float)width_pixle_x);
-            int pixel_y = std::round((cursorPos.y - start_holst_y) / (float)width_pixle_y);
+            int pixel_y = std::round((cursorPos.y - start_holst_y) / (float)height_pixle_y);
             if (matrix_holst[pixel_y][pixel_x] == 0)
             {
                 matrix_holst[pixel_y][pixel_x] = 1;
                 change = true;
             }
         }
-        else if ((cursorPos.y >= end_holst_y + 1 * width_pixle_y) && (cursorPos.y <= end_holst_y + 4 * width_pixle_y))
+        else if ((cursorPos.y >= end_holst_y + 1 * height_pixle_y) && (cursorPos.y <= end_holst_y + 4 * height_pixle_y))
         {
-            if ((cursorPos.x <= start_holst_x + 3 * width_pixle_x))
+
+            if ((cursorPos.x <= start_holst_x + width_btn_x * width_pixle_x))
             {
                 ClearMatrix(matrix_holst, width, height);
             }
-            else if ((cursorPos.x <= start_holst_x + 6 * width_pixle_x))
+            else if ((cursorPos.x <= start_holst_x + width_btn_x * 2 * width_pixle_x))
             {
-                NoiseRemoval(matrix_holst, width, height);
+                std::cout << "Start";
+            }
+            else if ((cursorPos.x <= start_holst_x + width_btn_x * 3 * width_pixle_x))
+            {
+                std::cout << "is_x";
+            }
+            else if ((cursorPos.x <= start_holst_x + width_btn_x * 4 * width_pixle_x))
+            {
+                std::cout << "is_0";
             }
         }
     }
     return change;
 }
 
-int main()
+void Start()
 {
-    bot_border = left_board + mtp_strin_on_number(bot_border_pixel, width);
-    top_border = left_board + mtp_strin_on_number(top_border_pixel, width);
-
-    create_matrix_holst(matrix_holst);
-    print_holst_and_matrix(matrix_holst);
     int i = 0;
     bool active_click = false;
     while (true)
@@ -121,7 +125,7 @@ int main()
         {
             POINT cursorPos;
             GetCursorPos(&cursorPos);
-            if ((cursorPos.x > end_holst_x) or cursorPos.y > end_holst_y)
+            if ((cursorPos.x > end_holst_x) or cursorPos.y > end_holst_y + end_buttons_y)
             {
                 continue;
             }
@@ -146,7 +150,15 @@ int main()
         }
         Sleep(1);
     }
+}
+int main()
+{
+    bot_border = left_board + mtp_strin_on_number(bot_border_pixel, width);
+    top_border = left_board + mtp_strin_on_number(top_border_pixel, width);
 
+    create_matrix_holst(matrix_holst);
+    print_holst_and_matrix(matrix_holst);
+    Start();
     system("pause");
     return 0;
 }
