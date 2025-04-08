@@ -11,7 +11,7 @@
 using namespace UI;
 
 std::vector<std::vector<int>> matrix_holst;
-std::vector<double> weight_layer;
+std::vector<std::vector<double>> matrix_weight_layer;
 int MATRIX_SIZE = 28;
 // 1 символ 19 пиксель в высоту
 // 1 символ 19 пиксель в ширину
@@ -101,21 +101,21 @@ bool check_holst(std::vector<std::vector<int>> &matrix_holst, POINT &cursorPos)
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 2 * width_pixle_x))
             {
-                std::cout << GetResult(weight_layer, matrix_holst) << "\n";
+                std::cout << GetResult(matrix_weight_layer, matrix_holst) << "\n";
                 system("pause");
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 3 * width_pixle_x))
             {
                 std::cout << "Обученна\n";
-                Traning(weight_layer, matrix_holst, 1);
-                SaveWeights(weight_layer, "weight_layer");
+                Traning(matrix_weight_layer, matrix_holst, 1);
+                SaveWeights(matrix_weight_layer, "weight_layer");
                 system("pause");
             }
             else if ((cursorPos.x <= start_holst_x + width_btn_x * 4 * width_pixle_x))
             {
                 std::cout << "Обученна\n";
-                Traning(weight_layer, matrix_holst, 0);
-                SaveWeights(weight_layer, "weight_layer");
+                Traning(matrix_weight_layer, matrix_holst, 0);
+                SaveWeights(matrix_weight_layer, "weight_layer");
                 system("pause");
             }
         }
@@ -165,9 +165,9 @@ int main()
 
     // system("color f0");
 
-    weight_layer = LoadWeights("weight_layer");
-    if (weight_layer.size() == 0)
-        weight_layer = CreateWeightLayer(MATRIX_SIZE * MATRIX_SIZE);
+    matrix_weight_layer = LoadWeights("weight_layer");
+    if (matrix_weight_layer.size() == 0)
+        matrix_weight_layer = CreateWeightLayer(2, MATRIX_SIZE * MATRIX_SIZE);
 
     bot_border = left_board + mtp_strin_on_number(bot_border_pixel, width);
     top_border = left_board + mtp_strin_on_number(top_border_pixel, width);

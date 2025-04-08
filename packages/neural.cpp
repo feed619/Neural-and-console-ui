@@ -15,16 +15,21 @@ struct OutputData
     }
 };
 
-std::vector<double> CreateWeightLayer(int size)
+std::vector<std::vector<double>> CreateWeightLayer(int count, int size)
 {
-    std::vector<double> weight_layer;
+    std::vector<std::vector<double>> matrix_weight_layer;
     std::srand(std::time(nullptr));
 
-    for (int i = 0; i < size; ++i)
+    for (int index = 0; index < count; ++index)
     {
-        weight_layer.push_back((double)(std::rand() % 199 - 99) * 0.1 / 100);
+        std::vector<double> weight_layer;
+        for (int i = 0; i < size; ++i)
+        {
+            weight_layer.push_back((double)(std::rand() % 199 - 99) * 0.1 / 100);
+        }
+        matrix_weight_layer.push_back(weight_layer);
     }
-    return weight_layer;
+    return matrix_weight_layer;
 }
 
 int PredictFunction(double value, float threshold = 0)
@@ -32,55 +37,87 @@ int PredictFunction(double value, float threshold = 0)
     return (value > threshold) ? 1 : 0;
 }
 
-void AdjustWeights(std::vector<double> &weight_layer,
+void AdjustWeights(std::vector<std::vector<double>> &matrix_weight_layer,
                    std::vector<std::vector<int>> &input_data,
+                   std::vector<int> vector_prediction,
                    int answer,
-                   double prediction,
                    float learning_rate = 0.1)
 {
-    double error = answer - prediction;
-    for (int i = 0; i < input_data.size(); ++i)
+    for (int index = 0; index < matrix_weight_layer.size(); ++index)
     {
-        for (int j = 0; j < input_data.size(); ++j)
+        int error;
+        if (index == answer)
+            error = 1 - vector_prediction[index];
+        else
+            error = 0 - vector_prediction[index];
+
+        for (int i = 0; i < input_data.size(); ++i)
         {
-            if (input_data[i][j])
-                weight_layer[i + j] += learning_rate * error * input_data[i][j];
+            for (int j = 0; j < input_data[i].size(); ++j)
+            {
+                matrix_weight_layer[index][i + j] += learning_rate * error * input_data[i][j];
+            }
         }
     }
 }
 
-double Predict(std::vector<double> &weight_layer,
-               std::vector<std::vector<int>> &input_data)
+std::vector<double> Predict(std::vector<std::vector<double>> &matrix_weight_layer,
+                            std::vector<std::vector<int>> &input_data)
 {
-    double weighted_sum = 0;
-
-    for (int i = 0; i < input_data.size(); ++i)
+    std::vector<double> vector_weighted_sum;
+    for (auto weight_layer : matrix_weight_layer)
     {
-        for (int j = 0; j < input_data.size(); ++j)
+        double weighted_sum = 0;
+        for (int i = 0; i < input_data.size(); ++i)
         {
-            weighted_sum += input_data[i][j] * weight_layer[i + j];
+            for (int j = 0; j < input_data.size(); ++j)
+            {
+                weighted_sum += input_data[i][j] * weight_layer[i + j];
+            }
         }
+        vector_weighted_sum.push_back(weighted_sum);
     }
 
-    return weighted_sum;
+    return vector_weighted_sum;
 }
-
-std::string GetResult(std::vector<double> &weight_layer,
+int GetCorrectPosition(std::vector<int> &vector_prediction)
+{
+    int i = 0;
+    for (int prediction : vector_prediction)
+    {
+        if (prediction)
+            return i;
+        ++i;
+    }
+    return -1;
+}
+std::string GetResult(std::vector<std::vector<double>> &matrix_weight_layer,
                       std::vector<std::vector<int>> &input_data)
 {
-    double weighted_sum = Predict(weight_layer, input_data);
-    int prediction = PredictFunction(weighted_sum);
-    std::cout << "Вессовая сумма " << weighted_sum << "\n"
-              << "На холсте изображен => ";
-    return OutputData::getValue(prediction);
+    std::vector<double> vector_weighted_sum = Predict(matrix_weight_layer, input_data);
+    std::vector<int> vector_prediction;
+    for (double weighted_sum : vector_weighted_sum)
+    {
+        int prediction = PredictFunction(weighted_sum);
+        vector_prediction.push_back(prediction);
+    }
+    int correct_position = GetCorrectPosition(vector_prediction);
+    return OutputData::getValue(correct_position);
 }
 
-std::string Traning(std::vector<double> &weight_layer,
-                    std::vector<std::vector<int>> &input_data,
-                    int answer)
+void Traning(std::vector<std::vector<double>> &matrix_weight_layer,
+             std::vector<std::vector<int>> &input_data,
+             int answer)
 {
-    double weighted_sum = Predict(weight_layer, input_data);
-    int prediction = PredictFunction(weighted_sum);
-    AdjustWeights(weight_layer, input_data, answer, prediction);
-    return OutputData::getValue(prediction);
+    std::vector<double> vector_weighted_sum = Predict(matrix_weight_layer, input_data);
+    std::vector<int> vector_prediction;
+    for (double weighted_sum : vector_weighted_sum)
+    {
+        int prediction = PredictFunction(weighted_sum);
+        vector_prediction.push_back(prediction);
+    }
+    int correct_position = GetCorrectPosition(vector_prediction);
+
+    if (correct_position != answer)
+        AdjustWeights(matrix_weight_layer, input_data, vector_prediction, answer);
 }

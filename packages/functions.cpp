@@ -53,14 +53,18 @@ void printMatrix(std::vector<std::vector<int>> read_matrix)
     }
 }
 
-void SaveWeights(const std::vector<double> &weight_layer, const std::string &filename)
+void SaveWeights(const std::vector<std::vector<double>> &matrix_weight_layer, const std::string &filename)
 {
     std::ofstream file(filename);
     if (file.is_open())
     {
-        for (double weight : weight_layer)
+        for (auto weight_layer : matrix_weight_layer)
         {
-            file << weight << "\n";
+            for (double weight : weight_layer)
+            {
+                file << weight << "\n";
+            }
+            file << -999 << "\n";
         }
         file.close();
     }
@@ -70,16 +74,26 @@ void SaveWeights(const std::vector<double> &weight_layer, const std::string &fil
     }
 }
 
-std::vector<double> LoadWeights(const std::string &filename)
+std::vector<std::vector<double>> LoadWeights(const std::string &filename)
 {
-    std::vector<double> weight_layer;
+    std::vector<std::vector<double>> matrix_weight_layer;
     std::ifstream file(filename);
     if (file.is_open())
     {
         double weight;
+        std::vector<double> weight_layer;
         while (file >> weight)
         {
-            weight_layer.push_back(weight);
+            std::cout << weight;
+            if (weight == -999)
+            {
+                matrix_weight_layer.push_back(weight_layer);
+                weight_layer.clear();
+            }
+            else
+            {
+                weight_layer.push_back(weight);
+            }
         }
         file.close();
     }
@@ -87,5 +101,5 @@ std::vector<double> LoadWeights(const std::string &filename)
     {
         std::cerr << "Ошибка при загрузке из файла\n";
     }
-    return weight_layer;
+    return matrix_weight_layer;
 }
