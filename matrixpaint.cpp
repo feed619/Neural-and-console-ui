@@ -161,9 +161,6 @@ void Start()
 }
 int main()
 {
-
-    // system("color f0");
-
     matrix_weight_layer = LoadWeights("weight_layer");
     if (matrix_weight_layer.size() == 0)
         matrix_weight_layer = CreateWeightLayer(2, MATRIX_SIZE * MATRIX_SIZE);

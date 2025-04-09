@@ -131,8 +131,6 @@ void Traning(std::vector<std::vector<double>> &matrix_weight_layer,
         vector_prediction.push_back(prediction);
         ++i;
     }
-    // int correct_position = GetCorrectPosition(vector_prediction);
-
     AdjustWeights(matrix_weight_layer, input_data, vector_prediction, answer);
     std::vector<double> vector_weighted_sum_2 = GetWeightedSum(matrix_weight_layer, input_data);
 }
