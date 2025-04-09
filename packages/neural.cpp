@@ -56,15 +56,15 @@ void AdjustWeights(std::vector<std::vector<double>> &matrix_weight_layer,
         {
             for (int j = 0; j < input_data.size(); ++j)
             {
-                // matrix_weight_layer[index][i + j] += learning_rate * error * input_data[i][j];
-                matrix_weight_layer[index][i * input_data.size() + j] += learning_rate * error * input_data[i][j];
+                if (input_data[i][j])
+                    matrix_weight_layer[index][i * input_data.size() + j] += learning_rate * error * input_data[i][j];
             }
         }
     }
 }
 
-std::vector<double> Predict(std::vector<std::vector<double>> &matrix_weight_layer,
-                            std::vector<std::vector<int>> &input_data)
+std::vector<double> GetWeightedSum(std::vector<std::vector<double>> &matrix_weight_layer,
+                                   std::vector<std::vector<int>> &input_data)
 {
     std::vector<double> vector_weighted_sum;
     int a = 0;
@@ -75,8 +75,8 @@ std::vector<double> Predict(std::vector<std::vector<double>> &matrix_weight_laye
         {
             for (int j = 0; j < input_data.size(); ++j)
             {
-                // std::cout << input_data << " - ";
-                weighted_sum += (double)input_data[i][j] * weight_layer[i * input_data.size() + j];
+                if (input_data[i][j])
+                    weighted_sum += (double)input_data[i][j] * weight_layer[i * input_data.size() + j];
             }
         }
         std::cout << "W=> " << a << "   " << weighted_sum << "\n";
@@ -100,7 +100,7 @@ int GetCorrectPosition(std::vector<int> &vector_prediction)
 std::string GetResult(std::vector<std::vector<double>> &matrix_weight_layer,
                       std::vector<std::vector<int>> &input_data)
 {
-    std::vector<double> vector_weighted_sum = Predict(matrix_weight_layer, input_data);
+    std::vector<double> vector_weighted_sum = GetWeightedSum(matrix_weight_layer, input_data);
     std::vector<int> vector_prediction;
     int max_index = 0;
 
@@ -121,7 +121,7 @@ void Traning(std::vector<std::vector<double>> &matrix_weight_layer,
              std::vector<std::vector<int>> &input_data,
              int answer)
 {
-    std::vector<double> vector_weighted_sum = Predict(matrix_weight_layer, input_data);
+    std::vector<double> vector_weighted_sum = GetWeightedSum(matrix_weight_layer, input_data);
     std::vector<int> vector_prediction;
 
     int i = 0;
@@ -134,5 +134,5 @@ void Traning(std::vector<std::vector<double>> &matrix_weight_layer,
     // int correct_position = GetCorrectPosition(vector_prediction);
 
     AdjustWeights(matrix_weight_layer, input_data, vector_prediction, answer);
-    std::vector<double> vector_weighted_sum_2 = Predict(matrix_weight_layer, input_data);
+    std::vector<double> vector_weighted_sum_2 = GetWeightedSum(matrix_weight_layer, input_data);
 }
