@@ -122,7 +122,6 @@ bool check_holst(std::vector<std::vector<int>> &matrix_holst, POINT &cursorPos)
     }
     return change;
 }
-
 void Start()
 {
     int i = 0;
