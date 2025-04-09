@@ -11,7 +11,12 @@ struct OutputData
 
     static std::string getValue(int key)
     {
-        return key ? value_x : value_0;
+        if (key == 0)
+            return value_0;
+        else if (key == 1)
+            return value_x;
+        else
+            return "Не смог определить!";
     }
 };
 
@@ -103,18 +108,28 @@ std::string GetResult(std::vector<std::vector<double>> &matrix_weight_layer,
     std::vector<double> vector_weighted_sum = GetWeightedSum(matrix_weight_layer, input_data);
     std::vector<int> vector_prediction;
     int max_index = 0;
-
+    int correct_index = -1;
+    int count_prediction = 0;
     int i = 0;
     for (double weighted_sum : vector_weighted_sum)
     {
         if (vector_weighted_sum[max_index] < vector_weighted_sum[i])
             max_index = i;
         int prediction = PredictFunction(weighted_sum);
+        if (prediction)
+        {
+            count_prediction++;
+            correct_index = i;
+        }
         vector_prediction.push_back(prediction);
         ++i;
     }
     std::cout << "\n";
-    return OutputData::getValue(max_index);
+    if (count_prediction > 1)
+    {
+        correct_index = -1;
+    }
+    return OutputData::getValue(correct_index);
 }
 
 void Traning(std::vector<std::vector<double>> &matrix_weight_layer,
