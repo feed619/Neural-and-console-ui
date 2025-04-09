@@ -84,7 +84,6 @@ std::vector<std::vector<double>> LoadWeights(const std::string &filename)
         std::vector<double> weight_layer;
         while (file >> weight)
         {
-            std::cout << weight;
             if (weight == -999)
             {
                 matrix_weight_layer.push_back(weight_layer);
