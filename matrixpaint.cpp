@@ -89,6 +89,10 @@ bool check_holst(std::vector<std::vector<int>> &matrix_holst, POINT &cursorPos)
             if (matrix_holst[pixel_y][pixel_x] == 0)
             {
                 matrix_holst[pixel_y][pixel_x] = 1;
+                matrix_holst[pixel_y][pixel_x + 1] = 1;
+                matrix_holst[pixel_y][pixel_x - 1] = 1;
+                matrix_holst[pixel_y - 1][pixel_x] = 1;
+                matrix_holst[pixel_y + 1][pixel_x] = 1;
                 change = true;
             }
         }
@@ -139,7 +143,7 @@ void Start()
             }
             active_click = true;
             check_holst(matrix_holst, cursorPos);
-            if (i >= 10)
+            if (i >= 3)
             {
                 i = 0;
                 system("cls");
